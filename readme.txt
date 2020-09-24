@@ -1,0 +1,1 @@
+This is the repository that will store my regression exercises from Codeup's curriculum. 
