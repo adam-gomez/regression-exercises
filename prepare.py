@@ -23,7 +23,7 @@ def split_my_data(df, pct=0.10):
     train, validate = train_test_split(train_validate, test_size=pct*2, random_state = 123)
     return train, validate, test
 
-def split_stratify_my_data(df, pct=0.10, strat):
+def split_stratify_my_data(df, strat, pct=0.10):
     '''
     This divides a dataframe into train, validate, and test sets straifying on the selected feature
 
@@ -150,3 +150,47 @@ def iqr_robust_scaler(train, validate, test):
     validate_scaled = pd.DataFrame(scaler.transform(validate), columns=validate.columns.values).set_index([validate.index.values])
     test_scaled = pd.DataFrame(scaler.transform(test), columns=test.columns.values).set_index([test.index.values])
     return scaler, train_scaled, validate_scaled, test_scaled 
+
+def quantile_scaler_normal(train, validate, test):
+    '''
+    Accepts three dataframes and applies QuantileTransform() to convert values in each dataframe
+    to a normal distribution. 
+    Columns containing object data types are dropped, as strings cannot be directly scaled.
+
+    Parameters (train, validate, test) = three dataframes being scaled
+    
+    Returns (scaler, train_scaled, validate_scaled, test_scaled)
+    '''
+    # Remove columns with object data types from each dataframe
+    train = train.select_dtypes(exclude=['object'])
+    validate = validate.select_dtypes(exclude=['object'])
+    test = test.select_dtypes(exclude=['object'])
+    # Fit the scaler to the train dataframe
+    scaler = QuantileTransformer(output_distribution='normal').fit(train)
+    # Transform the scaler onto the train, validate, and test dataframes
+    train_scaled = pd.DataFrame(scaler.transform(train), columns=train.columns.values).set_index([train.index.values])
+    validate_scaled = pd.DataFrame(scaler.transform(validate), columns=validate.columns.values).set_index([validate.index.values])
+    test_scaled = pd.DataFrame(scaler.transform(test), columns=test.columns.values).set_index([test.index.values])
+    return scaler, train_scaled, validate_scaled, test_scaled
+
+def quantile_scaler(train, validate, test):
+    '''
+    Accepts three dataframes and applies QuantileTransform() to convert values in each dataframe
+    to a uniform distribution. 
+    Columns containing object data types are dropped, as strings cannot be directly scaled.
+
+    Parameters (train, validate, test) = three dataframes being scaled
+    
+    Returns (scaler, train_scaled, validate_scaled, test_scaled)
+    '''  
+    # Remove columns with object data types from each dataframe
+    train = train.select_dtypes(exclude=['object'])
+    validate = validate.select_dtypes(exclude=['object'])
+    test = test.select_dtypes(exclude=['object'])
+    # Fit the scaler to the train dataframe
+    scaler = QuantileTransformer().fit(train)
+    # Transform the scaler onto the train, validate, and test dataframes
+    train_scaled = pd.DataFrame(scaler.transform(train), columns=train.columns.values).set_index([train.index.values])
+    validate_scaled = pd.DataFrame(scaler.transform(validate), columns=validate.columns.values).set_index([validate.index.values])
+    test_scaled = pd.DataFrame(scaler.transform(test), columns=test.columns.values).set_index([test.index.values])
+    return scaler, train_scaled, validate_scaled, test_scaled

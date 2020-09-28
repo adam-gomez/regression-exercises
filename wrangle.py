@@ -12,6 +12,8 @@ def get_connection(db, user=user, host=host, password=password):
 
     Parameters - (db, user=user, host=host, password=password)
     db = name of the database you wish to access
+
+    Returns a formatted address string
     '''
     return f'mysql+pymysql://{user}:{password}@{host}/{db}'
 
@@ -25,6 +27,8 @@ def wrangle_telco():
     The 'total_charges' column is converted to numeric data type
 
     Parameters - None 
+
+    Returns a dataframe
     '''
     sql_query = 'SELECT customer_id, monthly_charges, tenure, total_charges FROM customers WHERE contract_type_id = 3'
     df = pd.read_sql(sql_query, get_connection('telco_churn'))
