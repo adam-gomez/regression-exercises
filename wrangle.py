@@ -35,3 +35,10 @@ def wrangle_telco():
     df['total_charges'] = df.total_charges.replace(" ", 0)
     df['total_charges'] = pd.to_numeric(df.total_charges)
     return df
+
+def wrangle_grades():
+    grades = pd.read_csv("student_grades.csv")
+    grades.drop(columns="student_id", inplace=True)
+    grades.replace(r"^\s*$", np.nan, regex=True, inplace=True)
+    df = grades.dropna().astype("int")
+    return df
