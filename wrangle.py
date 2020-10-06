@@ -43,3 +43,8 @@ def wrangle_grades():
     grades.replace(r"^\s*$", np.nan, regex=True, inplace=True)
     df = grades.dropna().astype("int")
     return df
+
+def wrangle_country():
+    sql_query = 'SELECT SurfaceArea, Population, GNP, LifeExpectancy FROM country WHERE (SurfaceArea IS NOT NULL AND Population IS NOT NULL AND GNP IS NOT NULL AND LifeExpectancy IS NOT NULL)'
+    df = pd.read_sql(sql_query, get_connection('world'))
+    return df
